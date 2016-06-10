@@ -22,11 +22,19 @@
         <button type="submit">Upload</button>
       </div>
     </form>
-    <div id="msg"></div>
+    <table id="resp">
+      <tr>
+        <th>Status</th>
+        <th>Image</th>
+      </tr>
+    </table>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
   <script>
     $(document).ready(function() {
+
+      var display = $("#resp")
+
       $("#uploadForm").on("submit", function(event) {
         event.preventDefault()
         var settings = {
@@ -36,7 +44,14 @@
           contentType: false,
           processData: false,
           success: function(data) {
-            $("#msg").html(JSON.stringify(data, null, " "))
+            for (var i = 0; i < data.length; i++) {
+              var newRow = $("<tr>")
+              newRow.append($("<td>" + data[i].status + "</td>"))
+              if (data[i].imageURL) {
+                newRow.append($("<td><img src='" + data[i].imageURL + "' /></td>"))
+              }
+              display.append(newRow)
+            }
           },
           error: function(jqXHR, status, err) {
             $("#msg").html(err)
