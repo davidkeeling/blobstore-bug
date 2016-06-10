@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <div>
+    <h1>Multiple file input with the same name</h1>
+    <form id="uploadForm">
+      <div>
+        <label>Image #1</label>
+        <input type="file" name="image" />
+      </div>
+      <div>
+        <label>Image #2</label>
+        <input type="file" name="image" />
+      </div>
+      <div>
+        <label>Image #3</label>
+        <input type="file" name="image" />
+      </div>
+      <div>
+        <button type="submit">Upload</button>
+      </div>
+    </form>
+    <div id="msg"></div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $("#uploadForm").on("submit", function(event) {
+        event.preventDefault()
+        var settings = {
+          method: "POST",
+          data: new FormData(event.target),
+          dataType: "json",
+          contentType: false,
+          processData: false,
+          success: function(data) {
+            $("#msg").html(JSON.stringify(data, null, " "))
+          },
+          error: function(jqXHR, status, err) {
+            $("#msg").html(err)
+          }
+        }
+        $.getJSON("/uploadURL", function(resp) {
+          $.ajax(resp.uploadURL, settings)
+        })
+      })
+    })
+  </script>
+</body>
+</html>
