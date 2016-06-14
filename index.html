@@ -22,12 +22,7 @@
         <button type="submit">Upload</button>
       </div>
     </form>
-    <table id="resp">
-      <tr>
-        <th>Status</th>
-        <th>Image</th>
-      </tr>
-    </table>
+    <div id="resp"></div>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
   <script>
@@ -44,14 +39,7 @@
           contentType: false,
           processData: false,
           success: function(data) {
-            for (var i = 0; i < data.length; i++) {
-              var newRow = $("<tr>")
-              newRow.append($("<td>" + data[i].status + "</td>"))
-              if (data[i].imageURL) {
-                newRow.append($("<td><img src='" + data[i].imageURL + "' /></td>"))
-              }
-              display.append(newRow)
-            }
+            display.html(JSON.stringify(data, " "))
           },
           error: function(jqXHR, status, err) {
             $("#msg").html(err)

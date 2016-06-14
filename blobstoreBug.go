@@ -6,7 +6,6 @@ import (
 
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/blobstore"
-	"google.golang.org/appengine/image"
 )
 
 func init() {
@@ -26,25 +25,10 @@ func createUploadURL(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
 	blobs, _, err := blobstore.ParseUpload(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	resp := []map[string]string{}
-	for _, blob := range blobs["image"] {
-		blobStatus := map[string]string{
-			"BlobKey": string(blob.BlobKey),
-		}
-		url, err := image.ServingURL(c, blob.BlobKey, &image.ServingURLOptions{Size: 100})
-		if err != nil {
-			blobStatus["status"] = err.Error()
-			continue
-		}
-		blobStatus["status"] = "success"
-		blobStatus["imageURL"] = url.String()
-		resp = append(resp, blobStatus)
-	}
-	json.NewEncoder(w).Encode(resp)
+	json.NewEncoder(w).Encode(blobs)
 }
